@@ -232,10 +232,12 @@ En canvi a una freqüencia de sinusoide a 4000 Hz, en la transformada de fourier
     $0$ a $f_m/2$ en Hz.
 
     - Comprova que la mesura de freqüència es correspon amb la freqüència de la sinusoide que has fet servir.
-
+    Encara podem veure el pic corresponent a la frequencia central de la sinusode que hem trovat 
 
     - Com pots identificar l'amplitud de la sinusoide a partir de la representació de la transformada?
       Comprova-ho amb el senyal generat.
+    la magnitud del element de la transformada que correspon a la sinusode tindrala mateixa amplitud que el senyal original ho podem observer en el pic que hem vist calculant el seu varor original (abans de passar a Db)
+
 ```python
 
 #from numpy.fft import fft     # Importem la funció fft
@@ -245,13 +247,13 @@ X_dBf = 20*np.log10(X)
 
 k=np.arange(N)                        # Vector amb els valors 0≤  k<N
 
-freq = np.fft.fftfreq(N, d=1/fm)
+freq = np.fft.fftfreq(N, d=1/fm)      # rango de frecuencias
 freq_pos = freq[:N//2]
 
 plt.figure(1)                         # Nova figura
 plt.subplot(211)                      # Espai per representar el mòdul
 plt.plot(freq_pos,abs(X_dBf)[:(N//2)])                    # Representació del mòdul de la transformada
-plt.title(f'Transformada del senyal de Ls={Ls} mostres amb DFT de N={N}')   # Etiqueta del títol
+plt.title(f'Transformada del senyal amb DFT de N={N}')   # Etiqueta del títol
 plt.ylabel('|X[k]|')                  # Etiqueta de mòdul
 plt.subplot(212)                      # Espai per representar la fase
 plt.plot(k,np.unwrap(np.angle(X_dBf)))    # Representació de la fase de la transformad, desenroscada
@@ -274,11 +276,14 @@ plt.show()                            # Per mostrar els grafics
     Llegeix el fitxer d'àudio i comprova:
 
     - Freqüència de mostratge.
+    16000
     - Nombre de mostres de senyal.
+    128000
     - Tria un segment de senyal de 25ms i insereix una gráfica amb la seva evolució temporal.
+    0.025s * 16000 mostres/s = 400 mostres 
     - Representa la seva transformada en dB en funció de la freqüència, en el marge $0\le f\le f_m/2$.
     - Quines son les freqüències més importants del segment triat?
-
+    Podem veure pics a frequencies baixes.
  ```python
 x_4, fm = sf.read('veu.wav')
 print("Freqüència de mostratge: "+str(fm))
@@ -286,19 +291,19 @@ print("Nombre de mostres: "+str(len(x_4)))
 print("Durada"+str(len(x_4)//fm))
 
 N=5000                        # Dimensió de la transformada discreta
-X=fft(x_4[0 : len(x_4)],N )         # Càlcul de la transformada de 5 períodes de la sinusoide
+X=fft(x_4[0 : 400],N )         # Càlcul de la transformada de 5 períodes de la sinusoide
 X_dBf = 20*np.log10(X)
 
 k=np.arange(N)                        # Vector amb els valors 0≤  k<N
 
-freq = np.fft.fftfreq(N, d=1/fm)
+freq = np.fft.fftfreq(N, d=1/fm)       # rango de frecuencias
 freq_pos = freq[:N//2]
 
 
 plt.figure(1)                         # Nova figura
 plt.subplot(211)                      # Espai per representar el mòdul
 plt.plot(freq_pos,abs(X_dBf)[:(N//2)])                # Representació del mòdul de la transformada
-plt.title(f'Transformada del senyal de Ls={Ls} mostres amb DFT de N={N}')   # Etiqueta del títol
+plt.title(f'Transformada del senyal amb DFT de N={N}')   # Etiqueta del títol
 plt.ylabel('|X[k]|')                  # Etiqueta de mòdul
 plt.subplot(212)                      # Espai per representar la fase
 plt.plot(k,np.unwrap(np.angle(X_dBf)))    # Representació de la fase de la transformad, desenroscada
